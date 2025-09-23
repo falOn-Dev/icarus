@@ -1,0 +1,19 @@
+[package]
+name = "icarus"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cortex-m = "0.7.7"
+cortex-m-rt = "0.7.5"
+defmt = "1.0.1"
+defmt-rtt = "1.0.0"
+fugit = { version = "0.3.7", features = ["defmt"] }
+heapless = "0.9.1"
+libm = "0.2.15"
+nalgebra = { version = "0.34.0", default-features = false, features = ["libm"] }
+panic-halt = "1.0.0"
+panic-probe = { version = "1.0.0", features = ["print-defmt"] }
+rtic = { version = "2.2.0", features = ["thumbv7-backend"] }
+rtic-time = "2.0.1"
+stm32f4xx-hal = { version = "0.22.1", features = ["defmt", "rtic2", "stm32f446", "rtic-tim3"], git="https://github.com/stm32-rs/stm32f4xx-hal.git", rev="78d79609137d5c380320f7bf1a9120967babc61d" }
