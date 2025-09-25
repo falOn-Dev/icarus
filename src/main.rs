@@ -52,6 +52,7 @@ mod app {
 
         every_second::spawn().unwrap();
         every_five_seconds::spawn().unwrap();
+        overrun_bait::spawn().unwrap();
 
         (SharedResources {}, LocalResources {})
     }
@@ -59,23 +60,27 @@ mod app {
     // Every 1 Second
     #[task]
     async fn every_second(ctx: every_second::Context) {
-        let mut next = Mono::now() + 1.secs();
-        loop {
+        periodic_task!(every_second, 1.secs(), {
             defmt::info!("1 second passed");
-            Mono::delay_until(next).await;
-            next += 1.secs();
-        }
+        });
     }
 
     // Every 5 seconds
     #[task]
     async fn every_five_seconds(ctx: every_five_seconds::Context) {
-        let mut next = Mono::now() + 5.secs();
-        loop {
+        periodic_task!(every_five_seconds, 5.secs(), {
             defmt::info!("5 seconds passed");
-            Mono::delay_until(next).await;
-            next += 5.secs();
-        }
+        });
+    }
+
+    #[task]
+    async fn overrun_bait(ctx: overrun_bait::Context) {
+        periodic_task!(overrun_bait, 3.secs(), {
+            defmt::info!("Starting long task");
+            // Simulate a long task that causes an overrun
+            Mono::delay(4000.millis().into()).await;
+            defmt::info!("Long task complete");
+        });
     }
 
 }
